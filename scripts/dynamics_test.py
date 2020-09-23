@@ -9,7 +9,7 @@ if __name__ == "__main__":
     model = InvertedPendulum()
 
     # Set initial state [m, m/s, rad, rad/s]
-    model.set_state(np.mat([[0.0], [0.0], [pi / 4], [0.0]]))
+    model.set_state(np.mat([[0.0], [0.0], [0.1], [0.0]]))
 
     # Define controller
     controller = None

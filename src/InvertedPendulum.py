@@ -61,7 +61,7 @@ class InvertedPendulum:
     def dynamics(self, state, u):
         ds = np.zeros((4, 1))
         ds[0] = state[1]
-        ds[1] = (u + self.m * self.l * state[3] ** 2 * sin(state[2]) + self.m * self.g * cos(state[2]) *
+        ds[1] = (u + self.m * self.l * state[3] ** 2 * sin(state[2]) - self.m * self.g * cos(state[2]) *
                  sin(state[2])) / (self.M + self.m - self.m * cos(state[2]) ** 2) - self.b_x * self.state[1]
         ds[2] = state[3]
         ds[3] = (-cos(state[2]) / self.l) * ds[1] + (self.g / self.l) * sin(state[2]) - self.b_theta * self.state[3]
