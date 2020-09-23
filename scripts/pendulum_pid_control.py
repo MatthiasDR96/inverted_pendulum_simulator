@@ -1,19 +1,23 @@
 from src.InvertedPendulum import *
 from src.Simulator import *
+from src.controllers.PIDController import *
 
-# This script shows the normal behavior of the pendulum without control
+# This script shows the behavior of the pendulum controlled by a PID controller
 
 if __name__ == "__main__":
-    
+
     # Import model
     model = InvertedPendulum()
-
+    
     # Set initial state [m, m/s, rad, rad/s]
-    model.set_state(np.mat([[0.0], [0.0], [0.1], [0.0]]))
-
+    model.set_state(np.mat([[-0.3], [0.0], [0.1], [0.0]]))
+    
     # Define controller
-    controller = None
-
+    controller = Control(model)
+    
+    # Set desired cart position (m)
+    controller.set_desired_position(0.3)
+    
     # Simulate
     sim = Simulator(model, controller)
     t, state_list = sim.simulate()
@@ -47,6 +51,5 @@ if __name__ == "__main__":
     plt.tight_layout()
 
     # Save figure in data
-    plt.savefig("../data/Dynamics_result.png")
+    plt.savefig("../data/pendulum_PID_result.png")
     plt.show()
-

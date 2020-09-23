@@ -1,8 +1,8 @@
 from src.InvertedPendulum import *
 from src.Simulator import *
-from src.controllers.PIDController import *
+from src.controllers.PolePlacementController import *
 
-# This script shows the behavior of the pendulum controlled by a PID controller
+# This script shows the behavior of the pendulum controlled by a pole placement controller
 
 if __name__ == "__main__":
 
@@ -14,11 +14,11 @@ if __name__ == "__main__":
     
     # Define controller
     controller = Control(model)
-    
+
     # Set desired cart position (m)
     controller.set_desired_position(0.3)
-    
-    # Simulate
+
+    # Simulator
     sim = Simulator(model, controller)
     t, state_list = sim.simulate()
 
@@ -51,5 +51,5 @@ if __name__ == "__main__":
     plt.tight_layout()
 
     # Save figure in data
-    plt.savefig("../data/PID_result.png")
+    plt.savefig("../data/pendulum_pole_placement_result.png")
     plt.show()

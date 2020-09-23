@@ -8,6 +8,7 @@ class InvertedPendulum:
     def __init__(self):
         
         # System parameters
+        self.name = 'Pendulum'
         self.m = 0.5  # mass of bob (kg)
         self.M = 1.0  # mass of cart (kg)
         self.l = 0.5  # length of pendulum (m)
@@ -24,22 +25,14 @@ class InvertedPendulum:
         # State: [x, xdot, theta, thetadot]
         self.state = np.mat([[0.0], [0.0], [0.0], [0.0]])
         
-        # Continuous linearized state space representation without stepper
+        # Continuous linearized state space representation
         self.A_cont = np.mat([[0, 1, 0, 0], [0, -self.b_theta, -self.g * self.m / self.M, 0], [0, 0, 0, 1.],
                               [0, self.b_theta / self.l, (self.m + self.M) * self.g / (self.M * self.l), -self.b_x]])
         self.B_cont = np.mat([[0], [1.0 / self.M], [0], [-1 / (self.M * self.l)]])
 
-        # Discrete linearized state space representation without stepper (Eulers method)
+        # Discrete linearized state space representation(Eulers method)
         self.A_disc = np.identity(len(self.state)) + self.A_cont * self.dt
         self.B_disc = self.dt * self.B_cont
-        
-        # Continuous linearized state space representation with stepper
-        self.A_step_cont = np.mat([[0, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1.], [0, 0, self.g / self.l, 0]])
-        self.B_step_cont = np.mat([[0], [1.0], [0], [-1 / self.l]])
-        
-        # Discrete linearized state space representation with stepper (Eulers method)
-        self.A_step_disc = np.identity(len(self.state)) + self.A_step_cont * self.dt
-        self.B_step_disc = self.dt * self.B_step_cont
         
         # Measurement matrix
         self.C = np.array([[1, 0, 0, 0], [0, 0, 1, 0]])

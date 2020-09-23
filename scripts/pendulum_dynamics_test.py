@@ -1,22 +1,18 @@
 from src.InvertedPendulum import *
 from src.Simulator import *
-from src.controllers.FiniteHorizonController import *
 
-# This script shows the behavior of the pendulum controlled by a finite horizon controller
+# This script shows the normal behavior of the pendulum without control
 
 if __name__ == "__main__":
     
     # Import model
     model = InvertedPendulum()
-    
-    # Set initial state [m, m/s, rad, rad/s]
-    model.set_state(np.mat([[-0.3], [0.0], [0.1], [0.0]]))
-    
-    # Define controller
-    controller = Control(model)
 
-    # Set desired cart position (m)
-    controller.set_desired_position(0.3)
+    # Set initial state [m, m/s, rad, rad/s]
+    model.set_state(np.mat([[0.0], [0.0], [0.1], [0.0]]))
+
+    # Define controller
+    controller = None
 
     # Simulate
     sim = Simulator(model, controller)
@@ -51,5 +47,6 @@ if __name__ == "__main__":
     plt.tight_layout()
 
     # Save figure in data
-    plt.savefig("../data/FiniteHorizon_result.png")
+    plt.savefig("../data/pendulum_dynamics_result.png")
     plt.show()
+

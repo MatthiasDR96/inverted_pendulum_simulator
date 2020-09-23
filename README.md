@@ -1,6 +1,7 @@
 # Inverted Pendulum Simulator
 
-This is a Python package for the simulation of an inverted pendulum.
+This is a Python package for the simulation of an inverted pendulum and balancing robot with
+different control techniques.
 
 ## Installation
 
@@ -12,7 +13,7 @@ Once the package is opened in your favorite IDE (I recommend Pycharm), you're re
 ### Src
 
 In the src folder, all the controllers for stabilizing the pendulum are situated as well as the
-inverted pendulum model class and the main simulator class.
+inverted pendulum model class, the balancing robot model class, and the main simulator class.
 
 #### Simulator class
 

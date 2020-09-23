@@ -15,23 +15,28 @@ class Control:
         self.N = 100  # Prediction and control horizon
 
         # Control parameters
-        self.Q = np.mat([[100, 0, 0, 0], [0, 10, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
-        self.R = np.mat(np.identity(1))
-        self.P = np.mat([[1000, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0]])
+        if self.model.name == 'Pendulum':
+            self.Q = np.mat([[100, 0, 0, 0], [0, 10, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+            self.R = np.mat(np.identity(1))
+            self.P = np.mat([[1000, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0]])
+        else:
+            self.Q = np.mat([[1.0, 0.0], [0.0, 1.0]])
+            self.R = np.mat(np.identity(1))
+            self.P = np.mat([[1.0, 0.0], [0.0, 1.0]])
 
         # Get dynamics
         A = np.mat(self.model.A_disc)
         B = np.mat(self.model.B_disc)
 
         # Calculate matrix relating initial state to all successive states
-        Ahat = np.eye(4)
+        Ahat = np.eye(len(A))
         for i in range(self.N):
             An = np.linalg.matrix_power(A, i + 1)
             Ahat = np.r_[Ahat, An]
-        Ahat = Ahat[4:, :]
+        Ahat = Ahat[len(A):, :]
 
         # Calculate matrix relating control signals to successive states
-        Cbar = np.zeros((4, self.N))
+        Cbar = np.zeros((len(A), self.N))
         for i in range(self.N):
             tmp = None
             for ii in range(i + 1):
@@ -47,7 +52,7 @@ class Control:
                 else:
                     tmp = np.c_[tmp, tm]
             Cbar = np.r_[Cbar, tmp]
-        Cbar = Cbar[4:, :]
+        Cbar = Cbar[len(A):, :]
 
         # Calculate penalty matrices
         tm1 = np.eye(self.N)
@@ -67,7 +72,7 @@ class Control:
     def control(self, state):
 
         # Initial state
-        x0 = np.reshape(np.mat(state), (4, 1))
+        x0 = np.reshape(np.mat(state), (len(state), 1))
         
         # Solve for optimal control
         uopt = -self.H.I * self.F_trans.T * x0

@@ -13,11 +13,16 @@ class Control:
         self.xd = 0.0
         
         # Control parameters
-        self.Q = np.array([[100, 0, 0, 0], [0, 1, 0, 0], [0, 0, 10, 0], [0, 0, 0, 100]])
+        if self.model.name == 'Pendulum':
+            self.Q = np.array([[100, 0, 0, 0], [0, 1, 0, 0], [0, 0, 10, 0], [0, 0, 0, 100]])
+        else:
+            self.Q = np.array([[1, 0], [0, 1]])
         self.R = np.identity(1)
         
         # Compute optimal K
         self.K = self.lqr(self.model.A_cont, self.model.B_cont, self.Q, self.R)
+
+        ### Only for pendulum on cart, to track desired x position ###
 
         # Closed loop system matrix
         Acl = self.model.A_cont - self.model.B_cont * self.K
@@ -42,8 +47,10 @@ class Control:
         return K
     
     def control(self, state):
-        
+
         # Control signal
-        u = - self.K * state + self.xd * self.Kr
-        
+        if self.model.name == "Pendulum":
+            u = - self.K * state + self.xd * self.Kr
+        else:
+            u = - self.K * state
         return u

@@ -8,7 +8,8 @@ setuptools.setup(
     version="0.0.1",
     author="Matthias De Ryck",
     author_email="matthias.deryck@kuleuven.be",
-    description="A package for the simulation of an inverted pendulum",
+    description="A package for the simulation of an inverted pendulum and balancing robot with "
+                "different control techniques",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/MatthiasDR96/inverted_pendulum_simulator.git",

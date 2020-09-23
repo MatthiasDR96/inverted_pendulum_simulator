@@ -41,7 +41,7 @@ class Simulator:
         ax1.set_xlabel("X (m)")
         ax1.set_ylabel("Y (m)")
         ax1.grid()
-        
+
         # Control axis
         ax4 = self.fig.add_subplot(212, autoscale_on=False, xlim=(0, self.sim_time), ylim=(-20, 20))
         self.u_plot, = ax4.plot([], [], '-', lw=1, )
@@ -55,7 +55,7 @@ class Simulator:
 
         # Choose the interval based on dt and the time to animate one step
         t0 = time.time()
-        self.model.step_disc(0)  # Modulate one simulation step
+        self.model.step_cont(0)  # Modulate one simulation step
         t1 = time.time()
         self.interval = 1000 * self.delta_t - (t1 - t0)
     
@@ -64,14 +64,15 @@ class Simulator:
         self.pendulum_plot.set_data([], [])
         self.xd_plot.set_data([], [])
         self.time_plot.set_text('')
-        self.cart_plot.set_xy((-self.model.cart_width / 2, -self.model.cart_height / 2))
-        self.cart_plot.set_width(self.model.cart_width)
-        self.cart_plot.set_height(self.model.cart_height)
+        if self.model.name == "Pendulum":
+            self.cart_plot.set_xy((-self.model.cart_width / 2, -self.model.cart_height / 2))
+            self.cart_plot.set_width(self.model.cart_width)
+            self.cart_plot.set_height(self.model.cart_height)
         self.u_plot.set_data([], [])
         return self.pendulum_plot, self.xd_plot, self.u_plot, self.time_plot, self.cart_plot
     
     # Animation step
-    def animate(self, i):
+    def animate_pendulum(self, i):
     
         # Compute control signal
         if self.control:
@@ -86,12 +87,16 @@ class Simulator:
         self.state_list.append(self.model.state)
         
         # Compute pendulum mass position
-        x_pos_pend = self.model.l * np.sin(self.model.state[2]) + self.model.state[0]
-        y_pos_pend = self.model.l * np.cos(self.model.state[2])
-
-        # Set pendulum line from cart to mass
-        thisx = [self.model.state[0], x_pos_pend]
-        thisy = [0, y_pos_pend]
+        if self.model.name == "Pendulum":
+            x_pos_pend = self.model.l * np.sin(self.model.state[2]) + self.model.state[0]
+            y_pos_pend = self.model.l * np.cos(self.model.state[2])
+            thisx = [self.model.state[0], x_pos_pend]
+            thisy = [0, y_pos_pend]
+        else:
+            x_pos_pend = self.model.l * np.sin(self.model.state[0])
+            y_pos_pend = self.model.l * np.cos(self.model.state[0])
+            thisx = [0, x_pos_pend]
+            thisy = [0, y_pos_pend]
 
         # Plot pendulum
         self.pendulum_plot.set_data(thisx, thisy)
@@ -100,7 +105,8 @@ class Simulator:
         self.time_plot.set_text('time = %.1fs' % (i * self.delta_t))
 
         # Plot cart
-        self.cart_plot.set_x(self.model.state[0] - self.model.cart_width / 2)
+        if self.model.name == 'Pendulum':
+            self.cart_plot.set_x(self.model.state[0] - self.model.cart_width / 2)
 
         # Plot desired position
         if self.control:
@@ -114,12 +120,13 @@ class Simulator:
         self.u_plot.set_data(self.time_axis, self.u_list)
     
         return self.pendulum_plot, self.xd_plot, self.u_plot, self.time_plot, self.cart_plot
-    
+
     def simulate(self):
     
         # Animate
-        _ = animation.FuncAnimation(self.fig, self.animate, repeat=False, interval=self.interval, frames=self.frames,
-                                    blit=True, init_func=self.init)
+        _ = animation.FuncAnimation(self.fig, self.animate_pendulum, repeat=False, interval=self.interval, frames=self.frames,
+                                        blit=True, init_func=self.init)
+
         plt.tight_layout()
         plt.show()
         

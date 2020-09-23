@@ -1,8 +1,8 @@
 from src.InvertedPendulum import *
 from src.Simulator import *
-from src.controllers.LQRController import *
+from src.controllers.FiniteHorizonController import *
 
-# This script shows the behavior of the pendulum controlled by an LQR controller
+# This script shows the behavior of the pendulum controlled by a finite horizon controller
 
 if __name__ == "__main__":
     
@@ -14,10 +14,10 @@ if __name__ == "__main__":
     
     # Define controller
     controller = Control(model)
-    
+
     # Set desired cart position (m)
     controller.set_desired_position(0.3)
-    
+
     # Simulate
     sim = Simulator(model, controller)
     t, state_list = sim.simulate()
@@ -51,5 +51,5 @@ if __name__ == "__main__":
     plt.tight_layout()
 
     # Save figure in data
-    plt.savefig("../data/LQR_result.png")
+    plt.savefig("../data/pendulum_finiteHorizon_result.png")
     plt.show()

@@ -1,11 +1,11 @@
 from src.InvertedPendulum import *
 from src.Simulator import *
-from src.controllers.PolePlacementController import *
+from src.controllers.MPCController import *
 
-# This script shows the behavior of the pendulum controlled by a pole placement controller
+# This script shows the behavior of the pendulum controlled by an MPC controller
 
 if __name__ == "__main__":
-
+    
     # Import model
     model = InvertedPendulum()
     
@@ -14,14 +14,14 @@ if __name__ == "__main__":
     
     # Define controller
     controller = Control(model)
-
+    
     # Set desired cart position (m)
     controller.set_desired_position(0.3)
-
-    # Simulator
+    
+    # Simulate
     sim = Simulator(model, controller)
     t, state_list = sim.simulate()
-
+    
     # Plot data
     plt.figure()
     plt.subplot(2, 2, 1)
@@ -51,5 +51,5 @@ if __name__ == "__main__":
     plt.tight_layout()
 
     # Save figure in data
-    plt.savefig("../data/LQR_result.png")
+    plt.savefig("../data/pendulum_MPC_result.png")
     plt.show()

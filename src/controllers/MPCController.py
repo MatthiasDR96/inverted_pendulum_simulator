@@ -18,21 +18,26 @@ class Control:
         # Control limits
         self.umax = np.reshape(np.repeat(10, self.N), (self.N, 1))
         self.xmax = np.reshape(np.repeat(1, 4 * self.N), (4 * self.N, 1))
-        
+
         # Control parameters
-        self.Q = np.array([[100, 0, 0, 0], [0, 10, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
-        self.R = np.identity(1)
-        self.P = np.mat([[1000, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0]])
+        if self.model.name == 'Pendulum':
+            self.Q = np.mat([[100, 0, 0, 0], [0, 10, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+            self.R = np.mat(np.identity(1))
+            self.P = np.mat([[1000, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0]])
+        else:
+            self.Q = np.mat([[1.0, 0.0], [0.0, 1.0]])
+            self.R = np.mat(np.identity(1))
+            self.P = np.mat([[1.0, 0.0], [0.0, 1.0]])
 
         # Get dynamics
         A = np.mat(self.model.A_disc)
         B = np.mat(self.model.B_disc)
 
         # Alternative to calculating Abar, Bbar, Cbar, and Ahat
-        Abar = np.vstack((np.zeros((4, self.N*4)), np.hstack((np.kron(np.eye(self.N-1), A),
-        np.zeros((4*(self.N-1), 4))))))
+        Abar = np.vstack((np.zeros((len(A), self.N*len(A))), np.hstack((np.kron(np.eye(self.N-1), A),
+        np.zeros((len(A)*(self.N-1), len(A)))))))
         Bbar = np.kron(np.eye(self.N), B)
-        self.Ahat = (np.identity(np.shape(Abar)[0]) - Abar).I * np.kron(np.identity(self.N), A)[:, 0:4]
+        self.Ahat = (np.identity(np.shape(Abar)[0]) - Abar).I * np.kron(np.identity(self.N), A)[:, 0:len(A)]
         self.Cbar = (np.identity(np.shape(Abar)[0]) - Abar).I * Bbar
 
         # Calculate penalty matrices
@@ -49,7 +54,7 @@ class Control:
     def control(self, state):
 
         # Initial state
-        x0 = np.reshape(np.mat(state), (4, 1))
+        x0 = np.reshape(np.mat(state), (len(state), 1))
 
         # Set optimization variables
         u = cvxpy.Variable((self.N, 1))

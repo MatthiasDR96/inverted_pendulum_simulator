@@ -5,6 +5,7 @@ import numpy as np
 class Control:
     
     def __init__(self, model):
+
         # Bind model
         self.model = model
         
@@ -12,7 +13,10 @@ class Control:
         self.xd = 0.0
         
         # Compute desired K
-        desired_eigenvalues = [-2, -8, -9, -10]
+        if self.model.name == 'Pendulum':
+            desired_eigenvalues = [-2, -8, -9, -10]
+        else:
+            desired_eigenvalues = [-9, -10]
         self.K = control.place(self.model.A_cont, self.model.B_cont, desired_eigenvalues)
 
         # Closed loop system matrix
@@ -28,8 +32,11 @@ class Control:
         self.xd = x
     
     def control(self, state):
-        
+
         # Control signal
-        u = - self.K * state + self.xd * self.Kr
-        
+        if self.model.name == "Pendulum":
+            u = - self.K * state + self.xd * self.Kr
+        else:
+            u = - self.K * state
         return u
+

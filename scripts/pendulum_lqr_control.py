@@ -1,8 +1,8 @@
 from src.InvertedPendulum import *
 from src.Simulator import *
-from src.controllers.MPCController import *
+from src.controllers.LQRController import *
 
-# This script shows the behavior of the pendulum controlled by an MPC controller
+# This script shows the behavior of the pendulum controlled by an LQR controller
 
 if __name__ == "__main__":
     
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     # Simulate
     sim = Simulator(model, controller)
     t, state_list = sim.simulate()
-    
+
     # Plot data
     plt.figure()
     plt.subplot(2, 2, 1)
@@ -51,5 +51,5 @@ if __name__ == "__main__":
     plt.tight_layout()
 
     # Save figure in data
-    plt.savefig("../data/MPC_result.png")
+    plt.savefig("../data/pendulum_LQR_result.png")
     plt.show()
