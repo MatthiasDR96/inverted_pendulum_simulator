@@ -1,6 +1,7 @@
 class Control:
     
     def __init__(self, model):
+
         # Bind model
         self.model = model
         
@@ -35,7 +36,7 @@ class Control:
         else:
 
             # Theta control
-            error_theta = (state[0] - 0)
+            error_theta = (0 - state[0])
             u_theta_p = self.Kp_th * error_theta
             u_theta_d = self.Kd_th * state[1]
 

@@ -72,7 +72,7 @@ class Simulator:
         return self.pendulum_plot, self.xd_plot, self.u_plot, self.time_plot, self.cart_plot
     
     # Animation step
-    def animate_pendulum(self, i):
+    def animate(self, i):
     
         # Compute control signal
         if self.control:
@@ -124,7 +124,7 @@ class Simulator:
     def simulate(self):
     
         # Animate
-        _ = animation.FuncAnimation(self.fig, self.animate_pendulum, repeat=False, interval=self.interval, frames=self.frames,
+        _ = animation.FuncAnimation(self.fig, self.animate, repeat=False, interval=self.interval, frames=self.frames,
                                         blit=True, init_func=self.init)
 
         plt.tight_layout()
